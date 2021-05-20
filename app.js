@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const router = require('express').Router();
 const cocors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
@@ -30,24 +31,8 @@ app.use(cocors({
 	exposedHeaders: '*',
 	credentials: true
 }));
-/*
-app.use('/signup', router.post('/',celebrate({
-	body: Joi.object().keys({
-	  avatar: Joi.string().custom((value, helpers) => {
-		if (validator.isURL(value)) { return value; }
-		return helpers.message('Невалидная ссылка');
-	  }),
-	  email: Joi.string().required().email(),
-	  password: Joi.string().required().min(8),
-	}).unknown(true),
-  }), createUser));
-app.use('/signin', router.post('/', celebrate({
-	body: Joi.object().keys({
-	  email: Joi.string().required().email(),
-	  password: Joi.string().required(),
-	}).unknown(true),
-  }), login));
-*/
+app.use(cookieParser());
+
 app.post('/signup', celebrate({
 	body: Joi.object().keys({
 	  avatar: Joi.string().custom((value, helpers) => {
