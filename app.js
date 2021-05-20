@@ -53,7 +53,7 @@ app.post('/signin', celebrate({
     password: Joi.string().required(),
   }).unknown(true),
 }), login);*/
-app.post('/signup', router.post('/',celebrate({
+app.use('/signup', router.post('/',celebrate({
 	body: Joi.object().keys({
 	  avatar: Joi.string().custom((value, helpers) => {
 		if (validator.isURL(value)) { return value; }
