@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET = 'some-secret-key' } = process.env;
 
-module.exports = (req, res, next) => {	console.log(req.cookies.jwt);
+module.exports = (req, res, next) => {
   const authorization = req.cookies.jwt;
   if (!authorization /*|| !authorization.startsWith('jwt')*/) {
     return next({ statusCode: 401, errMess: 'Нет токена' });
