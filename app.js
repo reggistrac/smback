@@ -30,29 +30,7 @@ app.use(cocors({
 	exposedHeaders: '*',
 	credentials: true
 }));
-/*app.use(function(req,res,next){
-	const { origin } = req.headers;
-	res.header('Access-Control-Allow-Origin', '*');
-	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-	res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-	next();
-});*/
-/*app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().custom((value, helpers) => {
-      if (validator.isURL(value)) { return value; }
-      return helpers.message('Невалидная ссылка');
-    }),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }).unknown(true),
-}), createUser);
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }).unknown(true),
-}), login);*/
+/*
 app.use('/signup', router.post('/',celebrate({
 	body: Joi.object().keys({
 	  avatar: Joi.string().custom((value, helpers) => {
@@ -69,7 +47,23 @@ app.use('/signin', router.post('/', celebrate({
 	  password: Joi.string().required(),
 	}).unknown(true),
   }), login));
-
+*/
+app.post('/signup', celebrate({
+	body: Joi.object().keys({
+	  avatar: Joi.string().custom((value, helpers) => {
+		if (validator.isURL(value)) { return value; }
+		return helpers.message('Невалидная ссылка');
+	  }),
+	  email: Joi.string().required().email(),
+	  password: Joi.string().required().min(8),
+	}).unknown(true),
+  }), createUser);
+  app.post('/signin', celebrate({
+	body: Joi.object().keys({
+	  email: Joi.string().required().email(),
+	  password: Joi.string().required(),
+	}).unknown(true),
+  }), login);
 
 app.use(auth);
 app.use('/users', require('./routes/users'));
