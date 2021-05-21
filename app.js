@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const validator = require('validator');
@@ -32,7 +33,11 @@ app.use(cocors({
 	credentials: true
 }));
 app.use(cookieParser());
-
+app.get('/crash-test', () => {
+	setTimeout(() => {
+	  throw new Error('Сервер сейчас упадёт');
+	}, 0);
+  }); 
 app.post('/signup', celebrate({
 	body: Joi.object().keys({
 	  avatar: Joi.string().custom((value, helpers) => {
