@@ -67,7 +67,7 @@ module.exports.login = (req, res) => {
 };
 
 module.exports.logout = (req, res) => {
-	res.clearCookie('jwt',{secure:true}).status(200).send({ message: 'Куки токен удалён' });
+	res.clearCookie('jwt',{secure:true,sameSite:'none'}).status(200).send({ message: 'Куки токен удалён' });
 }
 
 module.exports.updateUser = (req, res, next) => {
