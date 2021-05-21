@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 const {
-  getAllUsers, getUser, updateUser, updateAvatar,
+  getAllUsers, getUser, updateUser, updateAvatar, logout
 } = require('../controllers/users');
 
 router.get('/', getAllUsers);
@@ -28,5 +28,7 @@ router.patch('/me/avatar', celebrate({
     }),
   }).unknown(true),
 }), updateAvatar);
+
+router.delete('/logout', logout);
 
 module.exports = router;
