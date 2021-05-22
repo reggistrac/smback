@@ -10,7 +10,7 @@ router.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().required().custom((value, helpers) => {
-      if (validator.isURL(value)) { return value; }
+      if (validator.isURL(value, { require_protocol: true })) { return value; }
       return helpers.message('Невалидная ссылка');
     }),
   }).unknown(true),

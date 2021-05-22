@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 const {
-  getAllUsers, getUser, updateUser, updateAvatar, logout
+  getAllUsers, getUser, updateUser, updateAvatar, logout,
 } = require('../controllers/users');
 
 router.get('/', getAllUsers);
@@ -23,7 +23,7 @@ router.patch('/me', celebrate({
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().required().custom((value, helpers) => {
-      if (validator.isURL(value)) { return value; }
+      if (validator.isURL(value, { require_protocol: true })) { return value; }
       return helpers.message('Невалидная ссылка');
     }),
   }).unknown(true),

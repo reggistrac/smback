@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const validator = require('validator');
-const router = require('express').Router();
 const cocors = require('cors');
 const cookieParser = require('cookie-parser');
 
@@ -10,7 +9,7 @@ const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const { requestLogger, errorLogger } = require('./middlewares/logger'); 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
@@ -28,32 +27,32 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(requestLogger);
 app.use(cocors({
-	origin: true,
-	exposedHeaders: '*',
-	credentials: true
+  origin: true,
+  exposedHeaders: '*',
+  credentials: true,
 }));
 app.use(cookieParser());
 app.get('/crash-test', () => {
-	setTimeout(() => {
-	  throw new Error('Сервер сейчас упадёт');
-	}, 0);
-  }); 
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 app.post('/signup', celebrate({
-	body: Joi.object().keys({
-	  avatar: Joi.string().custom((value, helpers) => {
-		if (validator.isURL(value)) { return value; }
-		return helpers.message('Невалидная ссылка');
-	  }),
-	  email: Joi.string().required().email(),
-	  password: Joi.string().required().min(8),
-	}).unknown(true),
-  }), createUser);
-  app.post('/signin', celebrate({
-	body: Joi.object().keys({
-	  email: Joi.string().required().email(),
-	  password: Joi.string().required(),
-	}).unknown(true),
-  }), login);
+  body: Joi.object().keys({
+    avatar: Joi.string().custom((value, helpers) => {
+      if (validator.isURL(value, { require_protocol: true })) { return value; }
+      return helpers.message('Невалидная ссылка');
+    }),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }).unknown(true),
+}), createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }).unknown(true),
+}), login);
 
 app.use(auth);
 app.use('/users', require('./routes/users'));
@@ -77,7 +76,7 @@ app.use((err, req, res, next) => {
   if (err.statusCode) {
     res.status(err.statusCode).send({ message });
   } else { res.status(500).send({ message: err.message }); }
-  //next();
+  next();
 });
 
 app.listen(PORT);

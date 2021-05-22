@@ -48,10 +48,10 @@ module.exports.login = (req, res) => {
   let userId;
   User.findOne({ email }).select('+password')
     .then((user) => {
-      userId = user._id;
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
+      userId = user._id;
       return bcrypt.compare(password, user.password);
     })
     .then((matched) => {
@@ -59,7 +59,9 @@ module.exports.login = (req, res) => {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
       const token = jwt.sign({ _id: userId }, JWT_SECRET, { expiresIn: '7d' });
-      res.cookie('jwt', token, { maxAge: 3600000 * 24 * 30, httpOnly: true, secure:true, sameSite:'none'}).status(200).send({ message: 'Ок' });
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 30, httpOnly: true, secure: true, sameSite: 'none',
+      }).status(200).send({ message: 'Ок' });
       return 'Ok';
     })
   // Сообщение об ошибке нестандартное, отправляется здесь.
@@ -67,8 +69,8 @@ module.exports.login = (req, res) => {
 };
 
 module.exports.logout = (req, res) => {
-	res.clearCookie('jwt',{secure:true,sameSite:'none'}).status(200).send({ message: 'Куки токен удалён' });
-}
+  res.clearCookie('jwt', { secure: true, sameSite: 'none' }).status(200).send({ message: 'Куки токен удалён' });
+};
 
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;

@@ -23,7 +23,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (card != null) {
-        if (card.owner.toString() === req._id._id) { Card.findByIdAndRemove(req.params.cardId).then((a) => res.send(a)); } else { next({ statusCode: 401, errMess: 'Чужое!' }); }
+        if (card.owner.toString() === req._id._id) { Card.findByIdAndRemove(req.params.cardId).then((a) => res.send(a)); } else { next({ statusCode: 403, errMess: 'Чужое!' }); }
       } else { next({ statusCode: 404 }); }
     })
     .catch((err) => {
