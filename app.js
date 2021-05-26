@@ -64,7 +64,7 @@ app.use('/', (req, res, next) => {
 
 app.use(errorLogger);
 app.use(errors());
-app.use((err, req, res, next) => {
+/* app.use((err, req, res, next) => {
   const errorss = {
     400: 'Некорректный запрос',
     401: 'Необходима авторизация',
@@ -77,6 +77,16 @@ app.use((err, req, res, next) => {
     res.status(err.statusCode).send({ message });
   } else { res.status(500).send({ message: err.message }); }
   next();
+}); */
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+  next();
 });
-
 app.listen(PORT);
