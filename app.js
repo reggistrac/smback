@@ -10,6 +10,7 @@ const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { FoundEr } = require('./errors/errors.js');
 
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
@@ -59,7 +60,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('/', (req, res, next) => {
-  next({ statusCode: 404 });
+  next(new FoundEr('Нет такого'));
 });
 
 app.use(errorLogger);
